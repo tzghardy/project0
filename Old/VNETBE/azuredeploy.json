@@ -1,0 +1,93 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+       "VDCName": {
+         "type": "string",
+         "defaultValue": "VDCNoName",
+         "allowedValues": [
+              "VDCNoName",
+              "Put data in here about naming scheme"
+         ]
+       },
+       "RGName": {
+          "type": "string",
+          "defaultValue": "RGNoName",
+          "allowedValues": [
+               "RGNoName",
+               "Put data in here about naming scheme"
+          ]
+       },
+        "vnetSubnetBEfixedAddress": {
+            "type": "string",
+            "defaultValue": "0.0.0.0/16"
+        },
+        "vnetSubnetBEdynamicAddress": {
+            "type": "string",
+            "defaultValue": "0.1.0.0/16"
+        },
+        "subnetBEfixedName": {
+            "type": "string",
+            "defaultValue": "subnetBEfixed"
+        },
+        "subnetBEdynamicName": {
+            "type": "string",
+            "defaultValue": "subnetBEdynamic"
+        },
+    },
+    "variables": {
+        "location": "[resourceGroup().location]",
+        "storageName": "[toLower(concat(parameters('RGName'),'lrs'))]",
+        "vnetName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
+        "vnetSubnetBEfixedName": "[toLower(concat(parameters('VDCName'),parameters('subnetBEfixedName')))]",
+        "vnetSubnetBEdynamicName": "[toLower(concat(parameters('VDCName'),parameters('subnetBEdynamicName')))]",
+        "vnetSubnetBEfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEfixedName')))]",
+        "vnetSubnetBEdynamicNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEdynamicName')))]",
+        "vnetSubnetBEfixedUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetBEfixedName')))]",
+        "vnetSubnetBEdynamicUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetBEdynamicName')))]",
+        "vnetSubnetBEUDRName": "[toLower(concat(parameters('VDCName'),'UDRBE')))]",
+    },
+    "resources": [
+        {
+            "name": "[variables('vnetName')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[variables('location')]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [],
+            "properties": {
+                "subnets": [
+                    {
+                        "name": "[variables('vnetSubnetBEfixedName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('vnetSubnetBEfixedAddress')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Networks/networkSecurityGroups',variables('vnetSubnetBEfixedNSGName'))]"
+                            },
+                            "routeTable": {
+                                "id": "[resourceID('Microsoft.Networks/routeTables',variables('vnetSubnetBEUDRName'))]"
+                            }
+                        },
+                        "tags": {
+                            "displayName": "[parameters('subnetBEfixedName')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('vnetSubnetBEdynamicName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('vnetSubnetBEdynamicAddress')]",
+                            "networkSecurityGroup": {
+                                "id": "[resourceId('Microsoft.Networks/networkSecurityGroups',variables('vnetSubnetBEdynamicNSGName'))]"
+                            },
+                            "routeTable": {
+                                "id": "[resourceID('Microsoft.Networks/routeTables',variables('vnetSubnetBEUDRName'))]"
+                            }
+                        },
+                        "tags": {
+                            "displayName": "'parameters('subnetBEdynamicName')'"
+                        }
+                    },
+                  ]
+            }
+      }
+    ]
+}

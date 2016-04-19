@@ -1,0 +1,8 @@
+{
+   "VDCName": {
+     "value": "VDC1",
+   },
+   "storageType": {
+        "value": "Standard_LRS",
+    },
+}

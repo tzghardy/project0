@@ -1,0 +1,116 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VDCName": {
+          "type": "string",
+          "defaultValue": "VDCNoName",
+        },
+        "vnetAddressPrefixFE": {
+           "type": "string",
+           "defaultValue": "0.0.0.0/8"
+        },
+        "vnetAddressPrefixBE": {
+          "type": "string",
+          "defaultValue": "1.0.0.0/8"
+        },
+        "subnetFEfixedName": {
+          "type": "string",
+          "defaultValue": "subnetFEfixed"
+        },
+        "subnetFEdynamicName": {
+          "type": "string",
+          "defaultValue": "subnetFEdynamic"
+        },
+        "subnetBEfixedName": {
+          "type": "string",
+          "defaultValue": "subnetBEfixed"
+        },
+        "subnetBEdynamicName": {
+          "type": "string",
+          "defaultValue": "subnetBEdynamic"
+        },
+        "subnetSECfixedName": {
+          "type": "string",
+          "defaultValue": "subnetSECfixed"
+        },
+        "vmaIpAddress": {
+          "type": "string",
+          "defaultValue": "10.0.0.1"
+        }
+    },
+    "variables": {
+      "rgName": "[resourceGroup().name]",
+      "location": "[resourceGroup().location]",
+      "vnetSubnetFEUDRName": "[toLower(concat(parameters('VDCName'),'UDRFE')))]",
+      "vnetSubnetBEUDRName": "[toLower(concat(parameters('VDCName'),'UDRBE')))]",
+      "vnetSubnetSECUDRName": "[toLower(concat(parameters('VDCName'),'UDRSEC')))]"
+    },
+    "resources": [
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/routeTables",
+        "name": "[parameters('vnetSubnetFEUDRName')]",
+        "location": "[variables('location')]",
+        "tags": {
+          "displayName": "UDR - FrontEnd"
+        },
+        "properties": {
+          "routes": [
+            {
+              "name": "RouteToBackEnd",
+              "properties": {
+                "addressPrefix": "[parameters('vnetAddressPrefixBE')]",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "[parameters('vmaIpAddress')]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/routeTables",
+        "name": "[parameters('vnetSubnetBEUDRName')]",
+        "location": "[variables('location')]",
+        "tags": {
+          "displayName": "UDR - BackEnd"
+        },
+        "properties": {
+          "routes": [
+            {
+              "name": "RouteToFrontEnd",
+              "properties": {
+                "addressPrefix": "[parameters('vnetAddressPrefixFE')]",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "[parameters('vmaIpAddress')]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/routeTables",
+        "name": "[parameters('vnetSubnetSECUDRName')]",
+        "location": "[variables('location')]",
+        "tags": {
+          "displayName": "UDR - NetSec"
+        },
+        "properties": {
+          "routes": [
+            {
+              "name": "defaultRoute",
+              "properties": {
+                "addressPrefix": "[parameters('vnetAddressPrefixFE')]",
+                "nextHopType": "VirtualAppliance",
+                "nextHopIpAddress": "[parameters('vmaIpAddress')]"
+              }
+            }
+          ]
+        }
+      },
+      ]
+    }
+  ]
+}
