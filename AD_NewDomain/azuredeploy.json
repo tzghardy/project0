@@ -150,6 +150,7 @@
     "adBDCOSDisk": "[concat(parameters('adBDCVMName'),'-osdisk')]",
     "adBDCDataDisk": "[concat(parameters('adBDCVMName'),'-datadisk-01')]",
     "adDataDiskSize": "1000",
+    "vnetwithDNSTemplateUri": "[concat(parameters('assetLocation'),'vnet-with-dns-server.json')]",
     "nicTemplateUri": "[concat(parameters('assetLocation'),'nic.json')]",
     "adPDCModulesURL": "[concat(parameters('assetLocation'),'CreateADPDC.ps1.zip')]",
     "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
@@ -457,7 +458,7 @@
         },
         "parameters": {
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[variables('location')]"
           },
           "virtualNetworkName": {
             "value": "[variables('virtualNetworkName')]"
