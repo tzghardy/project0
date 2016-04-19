@@ -127,7 +127,7 @@
       "metadata": {
         "description": "The location of resources such as templates and DSC modules that the script is dependent, currently references github due to lack of current azure location"
       },
-      "defaultValue": "https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/active-directory-new-domain-ha-2-dc/"
+      "defaultValue": "https://raw.githubusercontent.com/tzghardy/project0/master/AD_NewDomain/"
     }
   },
   "variables": {
@@ -136,10 +136,6 @@
     "virtualNetworkResourceGroup": "[toLower(concat('rg',parameters('VDCName'),'network'))]",
     "storageAccountName": "[toLower(concat(variables('rgName'),parameters('storageType')))]",
     "virtualNetworkName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
-    "DNSServerAddresses": [
-        "[parameters('adPDCNicIPAddress')]",
-        "[parameters('adBDCNicIPAddress')]"
-    ],
     "adSubnetName": "[toLower(concat(parameters('VDCName'),parameters('subnetBEfixedName')))]",
     "adPDCNicName": "[concat(parameters('adPDCVMName'),'-nic0')]",
     "adBDCNicName": "[concat(parameters('adBDCVMName'),'-nic0')]",
@@ -301,15 +297,31 @@
       ]
     },
     {
-      "name": "updateVNetDNS1",
-      "type": "Microsoft.Network/virtualNetworks",
-      "location": "[variables('location')]",
-      "apiVersion": "2015-05-01-preview",
+      "name": "UpdateVNetDNS1",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('adPDCVMName'),'/extensions/CreateADForest')]"
+      ],
       "properties": {
-        "mode": "incremental",
-        "dhcpOptions": {
-          "dnsServers": "[parameters('adPDCNicIPAddress')]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('vnetwithDNSTemplateUri')]",
+          "contentVersion": "1.0.0.0"
         },
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "virtualNetworkName": {
+            "value": "[variables('virtualNetworkName')]"
+          },
+          "DNSServerAddress": {
+            "value": [
+              "[parameters('adPDCNicIPAddress')]"
+            ]
+          }
+        }
       }
     },
     {
@@ -317,6 +329,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
       "dependsOn": [
+        "Microsoft.Resources/deployments/UpdateVNetDNS1"
       ],
       "properties": {
         "mode": "Incremental",
@@ -330,20 +343,6 @@
           },
           "nicName": {
             "value": "[variables('adBDCNicName')]"
-          },
-          "ipConfigurations": {
-            "value": [
-              {
-                "name": "ipconfig1",
-                "properties": {
-                  "privateIPAllocationMethod": "Static",
-                  "privateIPAddress": "[parameters('adBDCNicIPAddress')]",
-                  "subnet": {
-                    "id": "[variables('adSubnetRef')]"
-                  }
-                }
-              }
-            ]
           },
           "dnsServers": {
             "value": [
@@ -360,7 +359,7 @@
       "location": "[variables('location')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/',variables('adBDCNicName'))]",
-        "[concat('Microsoft.Compute/availabilitySets/', parameters('adAvailabilitySetName'))]",
+        "[concat('Microsoft.Compute/availabilitySets/',parameters('adAvailabilitySetName'))]",
       ],
       "properties": {
         "hardwareProfile": {
@@ -445,13 +444,30 @@
     },
     {
       "name": "UpdateVNetDNS2",
-      "type": "Microsoft.Network/virtualNetworks",
-      "location": "[variables('location')]",
-      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/',parameters('adBDCVMName'),'/extensions/CreateBDC')]"
+      ],
       "properties": {
-        "mode": "incremental",
-        "dhcpOptions": {
-          "dnsServers": "[variables('DNSServerAddresses')]"
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('vnetwithDNSTemplateUri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "virtualNetworkName": {
+            "value": "[variables('virtualNetworkName')]"
+          },
+          "DNSServerAddress": {
+            "value": [
+              "[parameters('adPDCNicIPAddress')]",
+              "[parameters('adBDCNicIPAddress')]"
+            ]
+          }
         }
       }
     }
