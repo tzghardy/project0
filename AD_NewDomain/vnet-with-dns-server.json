@@ -51,7 +51,8 @@
             "defaultValue": "subnetSECfixed"
         },
         "DNSServerAddresses": {
-            "type": "array", 
+            "type": "array",
+            "defaultValue": ["10.252.0.1"]
         }
     },
     "variables": {
