@@ -27,7 +27,6 @@
       "type": "Microsoft.Network/virtualNetworks",
       "location": "[parameters('location')]",
       "apiVersion": "2015-05-01-preview",
-      "mode": "Incremental",
       "properties": {
         "dhcpOptions": {
           "dnsServers": "[parameters('DNSServerAddress')]"
