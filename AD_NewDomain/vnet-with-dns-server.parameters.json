@@ -6,47 +6,36 @@
        "value": "VDC1",
     },
     "vnetAddressPrefix": {
-      "type": "string",
       "value": "10.0.0.0/8"
     },
     "vnetSubnetFEfixedAddress": {
-      "type": "string",
       "value": "10.250.0.0/16"
     },
     "vnetSubnetFEdynamicAddress": {
-      "type": "string",
       "value": "10.251.0.0/16"
     },
     "subnetFEfixedName": {
-      "type": "string",
       "value": "subnetFEfixed"
     },
     "subnetFEdynamicName": {
-      "type": "string",
       "value": "subnetFEdynamic"
     },
     "vnetSubnetBEfixedAddress": {
-      "type": "string",
       "value": "10.252.0.0/16"
     },
     "vnetSubnetBEdynamicAddress": {
-      "type": "string",
       "value": "10.253.0.0/16"
     },
     "subnetBEfixedName": {
-      "type": "string",
       "value": "subnetBEfixed"
     },
     "subnetBEdynamicName": {
-      "type": "string",
       "value": "subnetBEdynamic"
     },
     "vnetSubnetSECfixedAddress": {
-      "type": "string",
       "value": "10.249.0.0/16"
     },
     "subnetSECfixedName": {
-      "type": "string",
       "value": "subnetSECfixed"
     }
   }
