@@ -151,6 +151,7 @@
     "adBDCDataDisk": "[concat(parameters('adBDCVMName'),'-datadisk-01')]",
     "adDataDiskSize": "1000",
     "vnetwithDNSTemplateUri": "[concat(parameters('assetLocation'),'vnet-with-dns-server.json')]",
+    "vnetwithDNSTemplateParametersUri": "[concat(parameters('assetLocation', 'vnet-with-dns-server.parameters.json'))]",
     "nicTemplateUri": "[concat(parameters('assetLocation'),'nic.json')]",
     "adPDCModulesURL": "[concat(parameters('assetLocation'),'CreateADPDC.ps1.zip')]",
     "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
@@ -310,12 +311,13 @@
           "uri": "[variables('vnetwithDNSTemplateUri')]",
           "contentVersion": "1.0.0.0"
         },
+        "parametersLink": {
+          "uri": "[variables('vnetwithDNSTemplateParametersUri')]",
+          "contentVersion": "1.0.0.0"
+        },
         "parameters": {
           "location": {
             "value": "[variables('location')]"
-          },
-          "virtualNetworkName": {
-            "value": "[variables('virtualNetworkName')]"
           },
           "DNSServerAddress": {
             "value": [
@@ -456,14 +458,15 @@
           "uri": "[variables('vnetwithDNSTemplateUri')]",
           "contentVersion": "1.0.0.0"
         },
+        "parametersLink": {
+          "uri": "[variables('vnetwithDNSTemplateParametersUri')]",
+          "contentVersion": "1.0.0.0"
+        },
         "parameters": {
           "location": {
             "value": "[variables('location')]"
           },
-          "virtualNetworkName": {
-            "value": "[variables('virtualNetworkName')]"
-          },
-          "DNSServerAddress": {
+          "DNSServerAddresses": {
             "value": [
               "[parameters('adPDCNicIPAddress')]",
               "[parameters('adBDCNicIPAddress')]"
