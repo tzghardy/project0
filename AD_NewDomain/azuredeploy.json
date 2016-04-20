@@ -316,10 +316,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "DNSServerAddress": {
+          "DNSServerAddresses": {
             "value": [
               "[parameters('adPDCNicIPAddress')]"
             ]
@@ -453,7 +450,6 @@
         "[concat('Microsoft.Compute/virtualMachines/',parameters('adBDCVMName'),'/extensions/CreateBDC')]"
       ],
       "properties": {
-        "mode": "Incremental",
         "templateLink": {
           "uri": "[variables('vnetwithDNSTemplateUri')]",
           "contentVersion": "1.0.0.0"
@@ -463,9 +459,6 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "location": {
-            "value": "[variables('location')]"
-          },
           "DNSServerAddresses": {
             "value": [
               "[parameters('adPDCNicIPAddress')]",
