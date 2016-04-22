@@ -49,13 +49,6 @@
         "subnetSECfixedName": {
             "type": "string",
             "defaultValue": "subnetSECfixed"
-        },
-        "dnsServerAddresses": {
-            "type": "array",
-            "metadata": {
-              "description": "The DNS servers that will be used for this vnet, port 53 traffic will need to cross subnet boundaries"
-            },
-            "defaultValue": ["10.0.0.1","10.0.0.2"]
         }
     },
     "variables": {
@@ -94,9 +87,6 @@
               "addressPrefixes": [
                 "[parameters('vnetAddressPrefix')]"
               ]
-          },
-          "dhcpOptions": {
-            "dnsServers": "[parameters('dnsServerAddresses')]"
           },
           "subnets": [
             {
