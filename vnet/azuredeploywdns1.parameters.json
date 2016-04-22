@@ -45,5 +45,9 @@
     "subnetSECfixedName": {
         "type": "string",
         "value": "subnetSECfixed"
+    },
+    "dnsServerAddresses": {
+        "type": "array",
+        "value": ["10.252.0.11"]
     }
 }

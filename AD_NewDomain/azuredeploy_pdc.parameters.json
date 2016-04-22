@@ -1,0 +1,48 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "VDCName": {
+      "value": "VDC1"
+    },
+    "StorageType": {
+      "value": "LRS"
+    },
+    "adminUsername": {
+      "value": "azAdministrator"
+    },
+    "adminPassword": {
+      "value": "tempkey001!"
+    },
+    "vmSize": {
+      "value": "Standard_D2"
+    },
+    "domainName": {
+      "value": "mydomain.local"
+    },
+    "vmIPAddress": {
+      "value": "10.252.0.11"
+    },
+    "vmName": {
+      "value": "adPDC"
+    },
+    "adAvailabilitySetName": {
+      "value": "adAvailabilitySet"
+    },
+    "subnetName": {
+      "value": "subnetBEfixed"
+    },
+    "assetLocation": {
+      "value": "https://raw.githubusercontent.com/tzghardy/project0/master/AD_NewDomain/"
+    },
+    "dscModuleURLfile": {
+      "value": "CreateADPDC.ps1.zip"
+    },
+    "dscConfigurationFunction": {
+      "value": "CreateADPDC.ps1\\CreateADPDC"
+    },
+    "vmExtention": {
+      "value": "/CreateADForest"
+    }
+  }
+}
