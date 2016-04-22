@@ -32,9 +32,6 @@
     "adBDCVMName": {
       "value": "adBDC"
     },
-    "adVMSize": {
-      "value": "Basic_A1"
-    },
     "adAvailabilitySetName": {
       "value": "adAvailabiltySet"
     }
