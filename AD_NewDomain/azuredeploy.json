@@ -300,53 +300,6 @@
       ]
     },
     {
-      "name": "UpdateVNetDNS1",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('adPDCVMName'),'/extensions/CreateADForest')]"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('vnetwithDNSTemplateUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parametersLink": {
-          "uri": "[variables('vnetwithDNS1TemplateParametersUri')]",
-          "contentVersion": "1.0.0.0"
-        }
-      }
-    },
-    {
-      "name": "UpdateBDCNIC",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "Microsoft.Resources/deployments/UpdateVNetDNS1"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[variables('nicTemplateUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "location": {
-            "value": "[variables('location')]"
-          },
-          "nicName": {
-            "value": "[variables('adBDCNicName')]"
-          },
-          "dnsServers": {
-            "value": [
-              "[parameters('adPDCNicIPAddress')]"
-            ]
-          }
-        }
-      }
-    },
-    {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[parameters('adBDCVMName')]",
@@ -411,7 +364,6 @@
       "location": "[variables('location')]",
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', parameters('adBDCVMName'))]",
-        "Microsoft.Resources/deployments/UpdateBDCNIC"
       ],
       "properties": {
         "publisher": "Microsoft.Powershell",
@@ -436,31 +388,5 @@
         }
       }
     },
-    {
-      "name": "UpdateVNetDNS2",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2015-01-01",
-      "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/',parameters('adBDCVMName'),'/extensions/CreateBDC')]"
-      ],
-      "properties": {
-        "templateLink": {
-          "uri": "[variables('vnetwithDNSTemplateUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parametersLink": {
-          "uri": "[variables('vnetwithDNS2TemplateParametersUri')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "DNSServerAddresses": {
-            "value": [
-              "[parameters('adPDCNicIPAddress')]",
-              "[parameters('adBDCNicIPAddress')]"
-            ]
-          }
-        }
-      }
-    }
   ]
 }
