@@ -151,7 +151,8 @@
     "adBDCDataDisk": "[concat(parameters('adBDCVMName'),'-datadisk-01')]",
     "adDataDiskSize": "1000",
     "vnetwithDNSTemplateUri": "[concat(parameters('assetLocation'),'vnet-with-dns-server.json')]",
-    "vnetwithDNSTemplateParametersUri": "[concat(parameters('assetLocation'), 'vnet-with-dns-server.parameters.json')]",
+    "vnetwithDNS1TemplateParametersUri": "[concat(parameters('assetLocation'), 'vnet-with-dns-server.parameters1.json')]",
+    "vnetwithDNS2TemplateParametersUri": "[concat(parameters('assetLocation'), 'vnet-with-dns-server.parameters2.json')]",
     "nicTemplateUri": "[concat(parameters('assetLocation'),'nic.json')]",
     "adPDCModulesURL": "[concat(parameters('assetLocation'),'CreateADPDC.ps1.zip')]",
     "adPDCConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
@@ -312,15 +313,8 @@
           "contentVersion": "1.0.0.0"
         },
         "parametersLink": {
-          "uri": "[variables('vnetwithDNSTemplateParametersUri')]",
+          "uri": "[variables('vnetwithDNS1TemplateParametersUri')]",
           "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "DNSServerAddresses": {
-            "value": [
-              "[parameters('adPDCNicIPAddress')]"
-            ]
-          }
         }
       }
     },
@@ -455,7 +449,7 @@
           "contentVersion": "1.0.0.0"
         },
         "parametersLink": {
-          "uri": "[variables('vnetwithDNSTemplateParametersUri')]",
+          "uri": "[variables('vnetwithDNS2TemplateParametersUri')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {

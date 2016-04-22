@@ -49,7 +49,7 @@
         "subnetSECfixedName": {
             "type": "string",
             "defaultValue": "subnetSECfixed"
-        },
+        }
     },
     "variables": {
         "rgName": "[resourceGroup().name]",

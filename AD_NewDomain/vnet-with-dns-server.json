@@ -52,7 +52,6 @@
         },
         "DNSServerAddresses": {
             "type": "array",
-            "defaultValue": ["10.252.0.1"]
         }
     },
     "variables": {
