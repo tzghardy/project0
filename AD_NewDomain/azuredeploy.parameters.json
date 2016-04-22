@@ -33,7 +33,7 @@
       "value": "adBDC"
     },
     "adVMSize": {
-      "value": "Standard_D2"
+      "value": "Basic_A1"
     },
     "adAvailabilitySetName": {
       "value": "adAvailabiltySet"
