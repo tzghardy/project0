@@ -1,0 +1,271 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters":
+    {
+    "VDCName": {
+      "type": "string",
+      "defaultValue": "NoVDCName"
+    },
+    "storageType": {
+      "type": "string",
+      "metadata": {
+        "description": "Type of storage to build storage account name"
+      },
+      "defaultValue": "LRS"
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the subnet for the AD Servers, no good way to enumerate"
+      },
+      "defaultValue": "subnetBEfixed"
+    },
+    "vmIPAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP address of the new AD PDC"
+      },
+      "defaultValue": "10.0.0.4"
+    },
+    "vmName": {
+      "type": "string",
+      "metadata": {
+        "description": "The computer name of the PDC"
+      },
+      "defaultValue": "adPDC"
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Administrator of the new VM and Domain"
+      },
+      "defaultValue": "adAdministrator"
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password for the Administrator account of the new VM and Domain"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_DS1",
+        "Standard_D2",
+        "Standard_DS2",
+        "Standard_D3",
+        "Standard_DS3",
+        "Standard_D4",
+        "Standard_DS4",
+        "Standard_D11",
+        "Standard_DS11",
+        "Standard_D12",
+        "Standard_DS12",
+        "Standard_D13",
+        "Standard_DS13",
+        "Standard_D14",
+        "Standard_DS14"
+      ],
+      "metadata": {
+        "description": "The size of the VM Created"
+      },
+      "defaultValue": "Standard_D2"
+    },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "MicrosoftWindowsServer",
+      "metadata": {
+        "description": "Image Publisher"
+      }
+    },
+    "imageOffer": {
+      "type": "string",
+      "defaultValue": "WindowsServer",
+      "metadata": {
+        "description": "Image Offer"
+      }
+    },
+    "imageSKU": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "metadata": {
+        "description": "Image SKU"
+      }
+    },
+    "adAvailabilitySetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the availability set that the AD VM is created in"
+      },
+      "defaultValue": "adAvailabilitySet"
+    },
+    "domainName": {
+      "type": "string",
+      "metadata": {
+        "description": "The FQDN of the AD Domain created "
+      },
+      "defaultValue": "NewDomain"
+    },
+    "assetLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of resources such as templates and DSC modules that the script is dependent, currently references github due to lack of current azure location"
+      },
+      "defaultValue": "https://raw.githubusercontent.com/tzghardy/project0/master/AD_NewDomain/"
+    },
+    "dscModuleURLfile": {
+      "type": "string",
+      "metadata": {
+        "description": "DSC Module URL"
+      }
+    },
+    "dscConfigurationFunction": {
+      "type": "string",
+      "metadata": {
+        "description": "DSC Configuration Function"
+      }
+    },
+    "vmExtention": {
+      "type": "string",
+      "metadata": {
+        "description": "Microsoft VM Extension"
+      }
+    }
+  },
+
+  "variables": {
+    "rgName": "[resourceGroup().name]",
+    "location": "[resourceGroup().location]",
+    "virtualNetworkResourceGroup": "[toLower(concat('rg',parameters('VDCName'),'network'))]",
+    "virtualNetworkName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
+    "storageAccountName": "[toLower(concat(variables('rgName'),parameters('storageType')))]",
+    "virtualNetworkName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
+    "vmSubnetName": "[toLower(concat(parameters('VDCName'),parameters('subnetName')))]",
+    "vmNicName": "[concat(parameters('vmName'),'-nic0')]",
+    "VnetID": "[resourceId(variables('virtualNetworkResourceGroup'),'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
+    "vmSubnetRef": "[concat(variables('VnetID'),'/subnets/',variables('vmSubnetName'))]",
+    "vmNicId": "[resourceId('Microsoft.Network/networkInterfaces',variables('vmNicName'))]",
+    "IPConfigID": "[concat(variables('vmNicId'),'/ipConfigurations/ipconfig1')]",
+    "vmOSDisk": "[concat(parameters('vmName'),'-osdisk')]",
+    "vmDataDisk": "[concat(parameters('vmName'),'-datadisk-01')]",
+    "vmDataDiskSize": "1000",
+    "nicTemplateUri": "[concat(parameters('assetLocation'),'nic.json')]",
+    "dscModulesURL": "[concat(parameters('assetLocation'),parameters('dscModuleURLfile'))]",
+    "storagePath": "[toLower(concat('http://',variables('storageAccountName'),'.blob.core.windows.net/', parameters('vmName'),'/'))]"
+  },
+  "resources": [
+    {
+      "name": "[variables('vmNicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "location": "[variables('location')]",
+      "dependsOn": [],
+      "apiVersion": "2015-05-01-preview",
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Static",
+              "privateIPAddress": "[parameters('vmIPAddress')]",
+              "subnet": {
+                "id": "[variables('vmSubnetRef')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('vmName')]",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/',variables('vmNicName'))]",
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('adAvailabilitySetName'))]"
+        },
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[parameters('imagePublisher')]",
+            "offer": "[parameters('imageOffer')]",
+            "sku": "[parameters('imageSKU')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[variables('vmOSDisk')]",
+            "vhd": {
+              "uri": "[concat(variables('storagePath'), variables('vmOSDisk'),'.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          },
+          "dataDisks": [
+            {
+              "vhd": {
+                "uri": "[concat(variables('storagePath'), variables('vmDataDisk'),'.vhd')]"
+              },
+              "name": "[concat(variables('vmDataDisk'))]",
+              "caching": "None",
+              "diskSizeGB": "[variables('vmDataDiskSize')]",
+              "lun": 0,
+              "createOption": "empty"
+            }
+          ]
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('vmNicName'))]"
+            }
+          ]
+        }
+      },
+      "resources": [
+        {
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "name": "[concat(parameters('vmName'),parameters('vmExtention'))]",
+          "apiVersion": "2015-05-01-preview",
+          "location": "[variables('location')]",
+          "dependsOn": [
+            "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+          ],
+          "properties": {
+            "publisher": "Microsoft.Powershell",
+            "type": "DSC",
+            "typeHandlerVersion": "2.11",
+            "autoUpgradeMinorVersion": true,
+            "settings": {
+              "ModulesUrl": "[variables('dscModulesURL')]",
+              "ConfigurationFunction": "[parameters('dscConfigurationFunction')]",
+              "Properties": {
+                "DomainName": "[parameters('domainName')]",
+                "AdminCreds": {
+                  "UserName": "[parameters('adminUserName')]",
+                  "Password": "PrivateSettingsRef:AdminPassword"
+                }
+              }
+            },
+            "protectedSettings": {
+              "Items": {
+                "AdminPassword": "[parameters('adminPassword')]"
+              }
+            }
+          }
+        }
+      ]
+    },
+  ]
+}
