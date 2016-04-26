@@ -2,82 +2,115 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-       "VDCName": {
-         "type": "string",
-         "defaultValue": "VDCNoName",
-       },
-        "vnetAddressPrefix": {
-            "type": "string",
-            "defaultValue": "0.0.0.0/8"
+      "VDCName": {
+        "type": "string",
+        "defaultValue": "VDCNoName",
+      },
+      "vnetAddressPrefix": {
+        "type": "string",
+        "metadata": {
+          "description": "The wholistic address range to be used in Azure, this contains the subnets but isn't a routing container"
         },
-        "vnetSubnetFEfixedAddress": {
-            "type": "string",
-            "defaultValue": "0.0.0.0/16"
+        "defaultValue": "0.0.0.0/8"
+      },
+      "vnetSubnetFEfixedAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Front-End Subnet Address Space for Fixed IP assignments"
         },
-        "vnetSubnetFEdynamicAddress": {
-            "type": "string",
-            "defaultValue": "0.1.0.0/16"
+        "defaultValue": "0.0.0.0/16"
+      },
+      "vnetSubnetFEdynamicAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Front-End Subnet Address Space for Dynamic IP assignments"
         },
-        "subnetFEfixedName": {
-            "type": "string",
-            "defaultValue": "subnetFEfixed"
+        "defaultValue": "0.1.0.0/16"
+      },
+      "subnetFEfixedName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet Name Base for Front-End fixed IP address range, will be used to build real subnet names"
         },
-        "subnetFEdynamicName": {
-            "type": "string",
-            "defaultValue": "subnetFEdynamic"
+        "defaultValue": "subnetFEfixed"
+      },
+      "subnetFEdynamicName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet Name Base for Front-End dynamic IP address range, will be used to build real subnet names"
         },
-        "vnetSubnetBEfixedAddress": {
-            "type": "string",
-            "defaultValue": "0.3.0.0/16"
+        "defaultValue": "subnetFEdynamic"
+      },
+      "vnetSubnetBEfixedAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Back-End Subnet Address Space for Fixed IP assignments"
         },
-        "vnetSubnetBEdynamicAddress": {
-            "type": "string",
-            "defaultValue": "0.4.0.0/16"
+        "defaultValue": "0.3.0.0/16"
+      },
+      "vnetSubnetBEdynamicAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Back-End Subnet Address Space for Dynamic IP assignments"
         },
-        "subnetBEfixedName": {
-            "type": "string",
-            "defaultValue": "subnetBEfixed"
+        "defaultValue": "0.4.0.0/16"
+      },
+      "subnetBEfixedName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet Name Base for Back-End fixed IP address range, will be used to build real subnet names"
         },
-        "subnetBEdynamicName": {
-            "type": "string",
-            "defaultValue": "subnetBEdynamic"
+        "defaultValue": "subnetBEfixed"
+      },
+      "subnetBEdynamicName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet Name Base for Back-End dynamic IP address range, will be used to build real subnet names"
         },
-        "vnetSubnetSECfixedAddress": {
-            "type": "string",
-            "defaultValue": "0.5.0.0/16"
+        "defaultValue": "subnetBEdynamic"
+      },
+      "vnetSubnetSECfixedAddress": {
+        "type": "string",
+        "metadata": {
+          "description": "Security Subnet Address Space for Fixed IP assignments"
         },
-        "subnetSECfixedName": {
-            "type": "string",
-            "defaultValue": "subnetSECfixed"
+        "defaultValue": "0.5.0.0/16"
+      },
+      "subnetSECfixedName": {
+        "type": "string",
+        "metadata": {
+          "description": "Subnet Name Base for Security fixed IP address range, will be used to build real subnet names"
         },
-        "dnsServerAddresses": {
-            "type": "array",
-            "metadata": {
-              "description": "The DNS servers that will be used for this vnet, port 53 traffic will need to cross subnet boundaries"
-            },
-            "defaultValue": ["10.0.0.1","10.0.0.2"]
-        }
+        "defaultValue": "subnetSECfixed"
+      },
+      "dnsServerAddresses": {
+        "type": "array",
+        "metadata": {
+          "description": "The DNS servers that will be used for this vnet, port 53 traffic will need to cross subnet boundaries"
+        },
+        "defaultValue": ["10.0.0.1","10.0.0.2"]
+      }
     },
     "variables": {
-        "rgName": "[resourceGroup().name]",
-        "location": "[resourceGroup().location]",
-        "storageName": "[toLower(concat(variables('RGName'),'lrs'))]",
-        "vnetName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
-        "vnetSubnetFEfixedName": "[toLower(concat(parameters('VDCName'),parameters('subnetFEfixedName')))]",
-        "vnetSubnetFEdynamicName": "[toLower(concat(parameters('VDCName'),parameters('subnetFEdynamicName')))]",
-        "vnetSubnetFEfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetFEfixedName')))]",
-        "vnetSubnetFEdynamicNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetFEdynamicName')))]",
-        "vnetSubnetFEfixedUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetFEfixedName')))]",
-        "vnetSubnetFEdynamicUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetFEdynamicName')))]",
-        "vnetSubnetBEfixedName": "[toLower(concat(parameters('VDCName'),parameters('subnetBEfixedName')))]",
-        "vnetSubnetBEdynamicName": "[toLower(concat(parameters('VDCName'),parameters('subnetBEdynamicName')))]",
-        "vnetSubnetBEfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEfixedName')))]",
-        "vnetSubnetBEdynamicNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEdynamicName')))]",
-        "vnetSubnetBEfixedUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetBEfixedName')))]",
-        "vnetSubnetBEdynamicUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetBEdynamicName')))]",
-        "vnetSubnetSECfixedName": "[toLower(concat(parameters('VDCName'),parameters('subnetSECfixedName')))]",
-        "vnetSubnetSECfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetSECfixedName')))]",
-        "vnetSubnetSECfixedUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetSECfixedName')))]",
+      "rgName": "[resourceGroup().name]",
+      "location": "[resourceGroup().location]",
+      "storageName": "[toLower(concat(variables('RGName'),'lrs'))]",
+      "vnetName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
+      "vnetSubnetFEfixedName": "[toLower(concat(parameters('VDCName'),parameters('subnetFEfixedName')))]",
+      "vnetSubnetFEdynamicName": "[toLower(concat(parameters('VDCName'),parameters('subnetFEdynamicName')))]",
+      "vnetSubnetFEfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetFEfixedName')))]",
+      "vnetSubnetFEdynamicNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetFEdynamicName')))]",
+      "vnetSubnetFEfixedUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetFEfixedName')))]",
+      "vnetSubnetFEdynamicUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetFEdynamicName')))]",
+      "vnetSubnetBEfixedName": "[toLower(concat(parameters('VDCName'),parameters('subnetBEfixedName')))]",
+      "vnetSubnetBEdynamicName": "[toLower(concat(parameters('VDCName'),parameters('subnetBEdynamicName')))]",
+      "vnetSubnetBEfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEfixedName')))]",
+      "vnetSubnetBEdynamicNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetBEdynamicName')))]",
+      "vnetSubnetBEfixedUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetBEfixedName')))]",
+      "vnetSubnetBEdynamicUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetBEdynamicName')))]",
+      "vnetSubnetSECfixedName": "[toLower(concat(parameters('VDCName'),parameters('subnetSECfixedName')))]",
+      "vnetSubnetSECfixedNSGName": "[toLower(concat(parameters('VDCName'),'NSG',parameters('subnetSECfixedName')))]",
+      "vnetSubnetSECfixedUDRName": "[toLower(concat(parameters('VDCName'),'UDR',parameters('subnetSECfixedName')))]",
     },
     "resources": [
       {

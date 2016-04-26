@@ -4,6 +4,9 @@
     "parameters": {
       "VDCName": {
          "type": "string",
+         "metadata": {
+           "description": "used to build NSG names, the nsg build method is used in other deployments"
+         },
          "defaultValue": "VDCNoName",
       },
       "subnetFEfixedName": {

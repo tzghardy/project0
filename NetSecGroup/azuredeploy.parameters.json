@@ -2,28 +2,23 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-       "VDCName": {
-         "Value": "VDC1",
-       },
-        "subnetFEfixedName": {
-            "type": "string",
-            "Value": "subnetFEfixed"
-        },
-        "subnetFEdynamicName": {
-            "type": "string",
-            "Value": "subnetFEdynamic"
-        },
-        "subnetBEfixedName": {
-            "type": "string",
-            "Value": "subnetBEfixed"
-        },
-        "subnetBEdynamicName": {
-            "type": "string",
-            "Value": "subnetBEdynamic"
-        },
-        "subnetSECfixedName": {
-            "type": "string",
-            "Value": "subnetSECfixed"
-        }
-    },
+      "VDCName": {
+        "Value": "VDC1",
+      },
+      "subnetFEfixedName": {
+        "Value": "subnetFEfixed"
+      },
+      "subnetFEdynamicName": {
+        "Value": "subnetFEdynamic"
+      },
+      "subnetBEfixedName": {
+        "Value": "subnetBEfixed"
+      },
+      "subnetBEdynamicName": {
+        "Value": "subnetBEdynamic"
+      },
+      "subnetSECfixedName": {
+        "Value": "subnetSECfixed"
+      }
+    }
 }
