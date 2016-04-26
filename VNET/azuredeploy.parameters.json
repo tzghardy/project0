@@ -36,7 +36,6 @@
       "value": "10.249.0.0/16"
     },
     "subnetSECfixedName": {
-      "type": "string",
       "value": "subnetSECfixed"
     }
   }
