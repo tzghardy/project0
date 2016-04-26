@@ -27,11 +27,11 @@
         "Standard_RAGRS":"RAGRS",
         "Premium_LRS":"PLRS",
         "storageSuffix": "[variables(parameters('storageType'))]",
-        "storageName": "[toLower(concat(variables('rgName'),variables('storageSuffix')))]",
+        "storageAccountName": "[toLower(concat(variables('rgName'),variables('storageSuffix')))]",
     },
     "resources": [
         {
-            "name": "[variables('storageName')]",
+            "name": "[variables('storageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "location": "[variables('location')]",
             "apiVersion": "2015-06-15",
@@ -39,7 +39,8 @@
             "tags": {
                 "displayName": "coreStorage",
                 "type": "storage",
-                "resourceGroup": "core"
+                "resourceGroup": "core",
+                "storagetype": "storageSuffix"
             },
             "properties": {
                 "accountType": "[parameters('StorageType')]"
