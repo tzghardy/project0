@@ -211,7 +211,7 @@
                                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
                             },
                             "publicIPAddress": {
-                              "id": "[resourceID('Microsoft.Network/publicIPAddresses',variables('publicIPAddressName'))]"
+                              "id": "[resourceID('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]"
                             }
                         }
                     }
