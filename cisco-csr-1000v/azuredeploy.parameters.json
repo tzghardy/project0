@@ -1,33 +1,24 @@
 {
-    "location": {
-        "value": "eastasia"
+    "VDCName": {
+      "value": "VDC1"
     },
-    "virtualNetworkName": {
-        "value": "myVnet"
+    "storageType": {
+      "value": "LRS"
     },
-    "virtualNetworkExistingRGName": {
-        "value": ""
+    "FEsubnetName": {
+      "value": "subnetFEFixed"
     },
-    "virtualNetworkAddressPrefix": {
-        "value": "10.1.0.0/16"
+    "SECsubnetName": {
+      "value": "subnetSECFixed"
     },
-    "Subnet1Prefix": {
-        "value": "10.1.1.0/24"
-    },
-    "Subnet1Name": {
-        "value": "Subnet-1"
-    },
-    "Subnet2Prefix": {
-        "value": "10.1.2.0/24"
-    },
-    "Subnet2Name": {
-        "value": "Subnet-2"
+    "SECFixedIPAddress": {
+      "value": "10.249.0.11"
     },
     "adminUsername": {
-        "value": "cloudguy"
+        "value": "csrAdministrator"
     },
     "adminPassword": {
-        "value": "abc_123!"
+        "value": "tempkey001!"
     },
     "sshPublicKey": {
         "value": ""
@@ -36,36 +27,15 @@
         "value": "password"
     },
     "vmName": {
-        "value": "myvm"
-    },
-    "newStorageAccountName": {
-        "value": "cisco1"
-    },
-    "storageAccountType": {
-        "value": "Standard_LRS"
-    },
-    "storageAccountNewOrExisting": {
-        "value": "new"
-    },
-    "storageAccountExistingRG": {
-        "value": ""
+        "value": "csr1000v"
     },
     "publicIPAddressName": {
-        "value": "myPublicIP"
+        "value": "PIP-CSR"
     },
     "publicIPDnsName": {
-        "value": "cisco1"
-    },
-    "publicIPNewOrExisting": {
-        "value": "new"
-    },
-    "publicIPExistingRGName": {
-        "value": ""
-    },
-    "vnetNewOrExisting" : {
-        "value" : "new"
+        "value": "abracisco01"
     },
     "baseUrl": {
-        "value": "https://raw.githubusercontent.com/mahthi/azure-quickstart-templates/master/cisco-csr-1000v"
+        "value": "https://raw.githubusercontent.com/tzghardy/project0/master/cisco-csr-1000v"
     }
 }
