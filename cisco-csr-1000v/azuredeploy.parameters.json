@@ -1,41 +1,45 @@
 {
-    "VDCName": {
-      "value": "VDC1"
-    },
-    "storageType": {
-      "value": "LRS"
-    },
-    "FEsubnetName": {
-      "value": "subnetFEFixed"
-    },
-    "SECsubnetName": {
-      "value": "subnetSECFixed"
-    },
-    "SECFixedIPAddress": {
-      "value": "10.249.0.11"
-    },
-    "adminUsername": {
-        "value": "csrAdministrator"
-    },
-    "adminPassword": {
-        "value": "tempkey001!"
-    },
-    "sshPublicKey": {
-        "value": ""
-    },
-    "authenticationType": {
-        "value": "password"
-    },
-    "vmName": {
-        "value": "csr1000v"
-    },
-    "publicIPAddressName": {
-        "value": "PIP-CSR"
-    },
-    "publicIPDnsName": {
-        "value": "abracisco01"
-    },
-    "baseUrl": {
-        "value": "https://raw.githubusercontent.com/tzghardy/project0/master/cisco-csr-1000v"
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "VDCName": {
+        "value": "VDC1"
+      },
+      "storageType": {
+        "value": "LRS"
+      },
+      "FEsubnetName": {
+        "value": "subnetFEFixed"
+      },
+      "SECsubnetName": {
+        "value": "subnetSECFixed"
+      },
+      "SECFixedIPAddress": {
+        "value": "10.249.0.11"
+      },
+      "adminUsername": {
+          "value": "csrAdministrator"
+      },
+      "adminPassword": {
+          "value": "tempkey001!"
+      },
+      "sshPublicKey": {
+          "value": ""
+      },
+      "authenticationType": {
+          "value": "password"
+      },
+      "vmName": {
+          "value": "csr1000v"
+      },
+      "publicIPAddressName": {
+          "value": "PIP-CSR"
+      },
+      "publicIPDnsName": {
+          "value": "abracisco01"
+      },
+      "baseUrl": {
+          "value": "https://raw.githubusercontent.com/tzghardy/project0/master/cisco-csr-1000v"
+      }
     }
 }
