@@ -1,6 +1,6 @@
 <#
 >add-azurermaccount
->login-azureaccount
+>login-azurermaccount
 >get-azuresubscription
 
 Cisco Deploy requires: http://go.microsoft.com/fwlink/?LinkId=534873
@@ -42,20 +42,25 @@ $parametersbdc = $deployURL+"AD_NewDomain/azuredeploy_bdc.parameters.json"
 $deploycsr = $deployURL+"cisco-csr-1000v/azuredeploy.json"
 $parameterscsr = $deployURL+"cisco-csr-1000v/azuredeploy.parameters.json"
 
+date
 <#create core resource group#>
 New-AzureRmResourceGroup -Name $coreRG -Location $location
 
+date
 <#create Storage Account in resource group#>
 New-AzureRmResourceGroupDeployment -Name "Core_Storage_Account" -ResourceGroupName $coreRG -TemplateURI $deploystorage -TemplateParameterURI $parametersstoragecore
 
+date
 <#create Network Resrouce Group#>
 New-AzureRmResourceGroup -Name $networkRG -Location $location
 
+date
 <#
     create StorageAccount in resource group output is storageNameOutput = storageaccountname...
     this could be used later to push deployments together#>
 New-AzureRmResourceGroupDeployment -Name "Network_Storage_Account"-ResourceGroupName $networkRG -TemplateURI $deploystorage -TemplateParameterURI $parametersstoragenetwork
 
+date
 <#create NSG for VDC1, there are no actual rules in this template besides letting it build defualts#>
 New-AzureRmResourceGroupDeployment -Name "NetSecGroup_Deploy"-ResourceGroupName $networkRG -TemplateURI $deploynsg -TemplateParameterURI $parametersnsg
 
@@ -63,24 +68,31 @@ New-AzureRmResourceGroupDeployment -Name "NetSecGroup_Deploy"-ResourceGroupName 
 <#not_working (no Virt Appliance) New-AzureRmResourceGroupDeployment -ResourceGroupName "rgVDC1network" -TemplateURI "./UserDefRoute/azuredeploy.json" -TemplateParameterURI "./UserDefRoute/azuredeploy.parameters.json"
 #>
 
+date
 <#create virtualNetwork with 5 subnets (FE Fixed, FE Dynamic, BE Fixed, BE Dyanmic, Security Mgmt)#>
 New-AzureRmResourceGroupDeployment -Name "vNet_Deploy" -ResourceGroupName $networkRG -TemplateURI $deployvnet -TemplateParameterURI $parametersvnet
 
+date
 <#create availability set form AD#>
 New-AzureRmResourceGroupDeployment -Name "AD_Availability_Set" -ResourceGroupName $coreRG -TemplateURI $deployavset -TemplateParameterObject $parametersavset
 
+date
 <#create AD PDC, this takes 20-45 minutes since it builds a domain#>
 New-AzureRmResourceGroupDeployment -Name "PDC_Deploy" -ResourceGroupName $coreRG -TemplateURI $deploydc -TemplateParameterURI $parameterspdc
 
+date
 <#fix vnet DNS configuration with 1st server#>
 New-AzureRmResourceGroupDeployment -Name "Add_PDC_DNS"-ResourceGroupName $networkRG -TemplateURI $deployvnetwdns -TemplateParameterURI $parametersvnetdns1
 
+date
 <#create AD BDC, this takes 20-45 minutes since it promotes and replicates the domain#>
 New-AzureRmResourceGroupDeployment -Name "BDC_Deploy"-ResourceGroupName $coreRG -TemplateURI $deploydc -TemplateParameterURI $parametersbdc
 
+date
 <#fix vnet DNS configuration with 2nd server#>
-New-AzureRmResourceGroupDeployment -Name "Add_BDC_DNS" -ResourceGroupName $networkRG -TemplateURI $deployvnetdns -TemplateParameterURI $parametersvnetdns2
+New-AzureRmResourceGroupDeployment -Name "Add_BDC_DNS" -ResourceGroupName $networkRG -TemplateURI $deployvnetwdns -TemplateParameterURI $parametersvnetdns2
 
+date
 <#build CSR deployment, there are licensing issues if you don't prep the subscription for this;
   currently something isn't right with the PIP assignment, this takes 20-45 minutes#>
-New-AzureRmResourceGroupDeployment -Name "Add_BDC_DNS" -ResourceGroupName $networkRG -TemplateURI $deploycsr -TemplateParameterURI $parameterscsr
+New-AzureRmResourceGroupDeployment -Name "CSR_Deploy" -ResourceGroupName $networkRG -TemplateURI $deploycsr -TemplateParameterURI $parameterscsr
