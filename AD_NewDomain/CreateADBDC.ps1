@@ -40,12 +40,18 @@
             Ensure = "Present" 
             Name = "AD-Domain-Services"
         }
-        # Optional GUI tools            
+        # Optional GUI tools AD           
         WindowsFeature ADDSTools            
         {             
             Ensure = "Present"             
             Name = "RSAT-ADDS"             
-        }                    
+        }
+	# Optional GUI Tools for DNS
+	WindowsFeature DNSTools
+	{
+	    Ensure = "Present"
+	    Name = "RSAT-DNS-Server"
+	}                    
         xWaitForADDomain DscForestWait 
         { 
             DomainName = $DomainName 

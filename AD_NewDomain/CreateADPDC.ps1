@@ -62,7 +62,12 @@
             Ensure = "Present"             
             Name = "RSAT-ADDS"             
         }     
-
+        # Optional GUI Tools for DNS
+    	WindowsFeature DNSTools
+    	{
+    	    Ensure = "Present"
+    	    Name = "RSAT-DNS-Server"
+    	}               
         xADDomain FirstDS 
         {
             DomainName = $DomainName
