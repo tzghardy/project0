@@ -11,6 +11,9 @@
       "FEsubnetName": {
         "value": "subnetFEFixed"
       },
+      "FEfixedIPAddress": {
+        "value": "10.250.0.11"
+      },
       "SECsubnetName": {
         "value": "subnetSECFixed"
       },

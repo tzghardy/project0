@@ -17,7 +17,13 @@
             "defaultValue": "subnetFEFixed",
             "metadata": {
                 "description": "Front End Fixed Subnet Name"
-            },
+            }
+        },
+        "FEfixedIPAddress": {
+          "type": "string",
+          "metadata": {
+            "description": "Fixed IP in FE Subnet"
+          }
         },
         "SECsubnetName": {
             "type": "string",
@@ -183,7 +189,7 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "22",
                             "sourceAddressPrefix": "Internet",
-                            "destinationAddressPrefix": "*",
+                            "destinationAddressPrefix": "[parameters('FEfixedIPAddress')",
                             "access": "Allow",
                             "priority": 1100,
                             "direction": "Inbound"
@@ -197,13 +203,16 @@
             "type": "Microsoft.Network/networkInterfaces",
             "name": "[concat(parameters('vmName'),'-nic0')]",
             "location": "[variables('location')]",
-            "dependsOn": [],
+            "dependsOn": [
+              "[resourceId('Microsoft.Resources/deployments','SettingUpPublicIP')]"
+            ],
             "properties": {
                 "ipConfigurations": [
                     {
                         "name": "ipconfig1",
                         "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddress" : "[parameters('FEfixedIPAddress')]",
                             "subnet": {
                                 "id": "[variables('subnet1Ref')]"
                             },
