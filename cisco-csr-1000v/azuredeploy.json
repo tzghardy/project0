@@ -117,6 +117,7 @@
         "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', variables('FESubnetIDBase'))]",
         "subnet2Ref": "[concat(variables('vnetID'),'/subnets/', variables('SECSubnetIDBase'))]",
         "nsgName": "[concat(parameters('VDCName'),'nsg',parameters('FEsubnetName'))]",
+        "nsgEndpoint": "[concat(parameters('FEfixedIPAddress'),'/32')]",
         "apiVer": "2015-06-15",
         "publicIPAddressType": "Dynamic",
         "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
@@ -189,7 +190,7 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "22",
                             "sourceAddressPrefix": "Internet",
-                            "destinationAddressPrefix": "[concat(parameters('FEfixedIPAddress'),'/32']",
+                            "destinationAddressPrefix": "[variables('nsgEndpoint')]",
                             "access": "Allow",
                             "priority": 1100,
                             "direction": "Inbound"
