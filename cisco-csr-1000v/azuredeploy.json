@@ -190,7 +190,7 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "22",
                             "sourceAddressPrefix": "Internet",
-                            "destinationAddressPrefix": "[variables('nsgEndpoint')]",
+                            "destinationAddressPrefix": "10.250.0.11/32",
                             "access": "Allow",
                             "priority": 1100,
                             "direction": "Inbound"
