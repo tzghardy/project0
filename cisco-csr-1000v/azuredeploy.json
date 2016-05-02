@@ -189,7 +189,7 @@
                             "sourcePortRange": "*",
                             "destinationPortRange": "22",
                             "sourceAddressPrefix": "Internet",
-                            "destinationAddressPrefix": "[parameters('FEfixedIPAddress')",
+                            "destinationAddressPrefix": "[parameters('FEfixedIPAddress')]",
                             "access": "Allow",
                             "priority": 1100,
                             "direction": "Inbound"
