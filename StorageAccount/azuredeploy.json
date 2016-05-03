@@ -2,6 +2,9 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+      "VDCName": {
+        "type": "string"
+      },
        "storageType": {
           "type": "string",
           "defaultValue": "Standard_LRS",
@@ -27,7 +30,7 @@
         "Standard_RAGRS":"RAGRS",
         "Premium_LRS":"PLRS",
         "storageSuffix": "[variables(parameters('storageType'))]",
-        "storageAccountName": "[toLower(concat(variables('rgName'),variables('storageSuffix')))]",
+        "storageAccountName": "[toLower(concat(parameters('VDCName'),variables('rgName'),variables('storageSuffix')))]",
     },
     "resources": [
         {
@@ -40,7 +43,7 @@
                 "displayName": "coreStorage",
                 "type": "storage",
                 "resourceGroup": "core",
-                "storagetype": "storageSuffix"
+                "storagetype": "[variables('storageSuffix')"
             },
             "properties": {
                 "accountType": "[parameters('StorageType')]"

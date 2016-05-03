@@ -122,7 +122,7 @@
     "location": "[resourceGroup().location]",
     "virtualNetworkResourceGroup": "[toLower(concat('rg',parameters('VDCName'),'network'))]",
     "virtualNetworkName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
-    "storageAccountName": "[toLower(concat(variables('rgName'),parameters('storageType')))]",
+    "storageAccountName": "[toLower(concat(parameters('VDCName'),variables('rgName'),parameters('storageType')))]",
     "virtualNetworkName": "[toLower(concat(parameters('VDCName'),'Vnet'))]",
     "vmSubnetName": "[toLower(concat(parameters('VDCName'),parameters('subnetName')))]",
     "vmNicName": "[concat(parameters('vmName'),'-nic0')]",

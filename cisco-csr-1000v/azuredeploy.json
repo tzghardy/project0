@@ -105,7 +105,7 @@
         "imagePublisher": "cisco",
         "imageOffer": "cisco-csr-1000v",
         "imageSKU": "csr-azure-byol",
-        "storageAccount": "[toLower(concat(resourceGroup().Name,parameters('storageType')))]",
+        "storageAccount": "[toLower(concat(parameters('VDCName'),resourceGroup().Name,parameters('storageType')))]",
         "storageAccountUri": "[toLower(concat('https://',variables('storageAccount'),'.blob.core.windows.net/',parameters('vmName')))]",
         "OSDiskName": "osdisk",
         "vmStorageAccountContainerName": "csr",
