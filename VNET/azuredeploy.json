@@ -9,7 +9,7 @@
         "vnetAddressPrefix": {
             "type": "string",
             "metadata": {
-              "description": "The wholistic address range to be used in Azure, this contains the subnets but isn't a routing container"
+              "description": "The holistic address range to be used in Azure, this contains the subnets but isn't a routing container"
             },
             "defaultValue": "0.0.0.0/8"
         },
