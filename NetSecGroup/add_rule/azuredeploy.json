@@ -1,0 +1,61 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "VDCName": {
+      "type": "string",
+      "defaultValue": "VDC1"
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "subnetFEFixed"
+    },
+    "IPAddress": {
+      "type": "string",
+      "defaultValue": "0.0.0.0"
+    },
+    "nsgAddRule": {
+      "type": "string",
+      "defaultValue": ""
+    }
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "apiVer": "2015-06-15",
+    "nsgEndpoint": "[concat(parameters('IPAddress'),'/32')]",
+    "nsgName": "[concat(parameters('VDCName'),'nsg',parameters('subnetName'))]",
+  },
+  "resources": [
+    {
+      "apiVersion": "[variables('apiVer')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('nsgName')]",
+      "location": "[variables('location')]",
+      "properties": {
+          "mode": "Incremental",
+          "securityRules": [
+            {
+              "name": "NSG_Test_Allow",
+              "properties": {
+                "description": "Allow Test",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "123",
+                "sourceAddressPrefix": "Internet",
+                "destinationAddressPrefix": "[concat(parameters('IPAddress'),'/32')]",
+                "access": "Allow",
+                "priority": 1123,
+                "direction": "Inbound"
+              }
+            }
+          ]
+      }
+    }
+  ],
+  "outputs": {
+    "nsgAddRule": {
+      "type": "string",
+      "value": "[variables('nsgEndpoint')]"
+    }
+  }
+}
