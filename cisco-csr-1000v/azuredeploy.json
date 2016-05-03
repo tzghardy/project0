@@ -105,7 +105,7 @@
         "imagePublisher": "cisco",
         "imageOffer": "cisco-csr-1000v",
         "imageSKU": "csr-azure-byol",
-        "storageAccount": "[toLower(concat(parameters('VDCName'),resourceGroup().Name,parameters('storageType')))]",
+        "storageAccount": "[toLower(resourceGroup().Name,parameters('storageType'))]",
         "storageAccountUri": "[toLower(concat('https://',variables('storageAccount'),'.blob.core.windows.net/',parameters('vmName')))]",
         "OSDiskName": "osdisk",
         "vmStorageAccountContainerName": "csr",
@@ -119,6 +119,7 @@
         "nsgName": "[concat(parameters('VDCName'),'nsg',parameters('FEsubnetName'))]",
         "nsgEndpoint": "[concat(parameters('FEfixedIPAddress'),'/32')]",
         "apiVer": "2015-06-15",
+        "uniquePublicIPAddressName": "[concat(parameters('VDCName'),parameters('publicIPAddressName'))]",
         "publicIPAddressType": "Dynamic",
         "sshKeyPath": "[concat('/home/',parameters('adminUsername'),'/.ssh/authorized_keys')]",
         "publicIPSetupURL": "[concat(parameters('baseUrl'),'/publicip.json')]",
@@ -160,7 +161,7 @@
                         "value": "[variables('location')]"
                     },
                     "publicIPAddressName": {
-                        "value": "[parameters('publicIPAddressName')]"
+                        "value": "[variables('uniquePublicIPAddressName')]"
                     },
                     "publicIPAddressType": {
                         "value": "[variables('publicIPAddressType')]"
